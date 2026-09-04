@@ -42,6 +42,7 @@ class Watcher:
         self._segment: _Segment | None = None
         self._recent_styles: list[str] = []
         self._stop = False
+        self._last_active_at = ""
 
     def request_stop(self) -> None:
         self._stop = True
@@ -99,13 +100,18 @@ class Watcher:
         if style:
             self._recent_styles = push_recent_style(self._recent_styles, style)
 
+        # last_active_at は「直近で実際に操作していた時刻」。非アクティブの
+        # 間も前の値を保持し続ける（打刻ウィンドウが離席の開始時刻として使う）。
+        if active:
+            self._last_active_at = now.isoformat(timespec="seconds")
+
         state = State(
             updated_at=now.isoformat(timespec="seconds"),
             active=active,
             idle_sec=round(idle_sec, 1),
             current_style=style if style else (self._recent_styles[0] if self._recent_styles else None),
             recent_styles=self._recent_styles,
-            last_active_at=now.isoformat(timespec="seconds") if active else "",
+            last_active_at=self._last_active_at,
         )
         try:
             write_state(state)

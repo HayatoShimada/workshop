@@ -47,6 +47,7 @@ class Button:
     process: str
     counts_as_work: bool = True
     inherit_style: bool = True
+    color: str | None = None  # 省略時はUI側の既定パレットから自動割当
 
 
 @dataclass
@@ -145,6 +146,7 @@ def load_config(path: Path | None = None) -> Config:
             process=b.get("process", b["label"]),
             counts_as_work=b.get("counts_as_work", True),
             inherit_style=b.get("inherit_style", True),
+            color=b.get("color"),
         )
         for b in buttons_raw
     ] or default.buttons
