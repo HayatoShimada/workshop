@@ -1,0 +1,21 @@
+[format]
+encoding    = "utf-8-sig"    # Excelで開くためBOM付き
+delimiter   = ","
+date_format = "%Y/%m/%d"
+round_to    = 0.25
+
+[[columns]]
+header = "日付"
+source = "date"
+
+[[columns]]
+header = "品番"
+source = "style"
+
+[[columns]]
+header = "工程"
+source = "process"
+
+[[columns]]
+header = "工数(h)"
+source = "hours"

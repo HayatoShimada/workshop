@@ -1,0 +1,71 @@
+[schedule]
+day_start    = "08:30"
+day_end      = "18:00"
+slot_minutes = 15
+
+# 休憩時間帯。ここは自動で「休憩」として埋まり、打刻不要
+[[schedule.breaks]]
+name  = "昼休み"
+start = "12:00"
+end   = "13:00"
+
+[[schedule.breaks]]
+name  = "小休憩"
+start = "15:00"
+end   = "15:15"
+
+[tracking]
+poll_interval_sec  = 5      # 何秒ごとにアクティブウィンドウを見るか
+idle_threshold_sec = 180    # 何秒操作がなければ離席とみなすか
+ask_after_sec      = 1800   # 打刻なしの離席がこの長さを超えたら復帰時に聞く
+
+# 離席打刻ボタン（最大6個を推奨）
+[[buttons]]
+label          = "休憩"
+process        = "休憩"
+counts_as_work = false      # 提出用CSVに含めない
+inherit_style  = false      # 品番を引き継がない
+
+[[buttons]]
+label          = "トワル組み"
+process        = "トワル組み"
+counts_as_work = true
+inherit_style  = true       # 直前の品番を引き継ぐ
+
+[[buttons]]
+label          = "検品・確認"
+process        = "検品・確認"
+counts_as_work = true
+inherit_style  = true
+
+[[buttons]]
+label          = "打合せ"
+process        = "会議・打合せ"
+counts_as_work = true
+inherit_style  = false
+
+# 品番の自動抽出ルール（命名規則が判明したら追加していく）
+[extract]
+style_patterns = [
+  '\d{2}[ASFW]{2}-[A-Z]{2}-\d{4}',   # 例: 25AW-BL-1234
+]
+
+# ウィンドウから工程を推定するルール
+[[process_hints]]
+name          = "パターン"
+match_process = ["AGMS.exe", "YUKA.exe"]
+
+[[process_hints]]
+name          = "仕様書"
+match_process = ["EXCEL.EXE"]
+
+[[process_hints]]
+name          = "会議・メール"
+match_process = ["OUTLOOK.EXE", "Teams.exe", "ms-teams.exe"]
+
+# 工程の選択肢（Excelの入力規則として埋め込む）
+[choices]
+processes = [
+  "パターン", "グレーディング", "修正", "仕様書",
+  "トワル組み", "検品・確認", "会議・打合せ", "その他"
+]

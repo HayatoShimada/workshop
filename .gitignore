@@ -1,0 +1,15 @@
+# 生ログ・タイムライン・集計結果は本人のPCの中だけに置く（DESIGN.md 5章）
+data/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# PyInstaller
+build/
+dist/
+*.spec
